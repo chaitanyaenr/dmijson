@@ -1,6 +1,8 @@
 #!/bin/bash
 
-#
+#Copyright (c) 2015, paulstuart
+#All rights reserved.
+
 # convert the output of dmidecode into JSON
 #
 # labels are stripped of all non alphanumeric text
@@ -136,7 +138,8 @@ do
     let "TAGS--"
     echo "  \"$TAG\":"
     CNT=$(ls $TMPDIR/$TAG | wc -l)
-    [[ $CNT -eq 1 ]] && show $TMPDIR/$TAG/* && echo -e "\n," && continue
+    [[ $CNT -eq 1 ]] && [[ $TAG -gt 0 ]] && show $TMPDIR/$TAG/* && echo -e "\n," && continue
+    [[ $CNT -eq 1 ]] && [[ $TAG -eq 0 ]] && show $TMPDIR/$TAG/* && continue
     echo "  ["
     for FILE in $TMPDIR/$TAG/*
     do
@@ -154,23 +157,7 @@ rm -rf $TMPDIR
 
 }
 
-# while one would normally save output via redirection
-# go:generate doesn't support that so we bake it in
+file=$1
+save=$2
 
-unset FILENAME STDIN
-
-while getopts "f:s" opt; do
-  case $opt in
-      f) FILENAME=$OPTARG ;;
-      s) STDIN=true ;;
-    esac
-done
-
-if [[ $STDIN ]]; then
-    [[ $FILENAME ]] && tojson > $FILENAME || tojson
-    exit
-fi
-
-[[ $FILENAME ]] && sudo dmidecode | tojson > $FILENAME && exit
-sudo dmidecode | tojson 
-
+awk '/type 16/,/type 19/' $file | tojson > $save 

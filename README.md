@@ -1,7 +1,9 @@
 # dmijson
-Convert dmidecode output to JSON
+Convert dmidecode output - type 16, 17 ( memory stats ) to JSON
 
-Example: sudo bin/dmij -d -f savedata.json
+####Run
+$ ./bin/dmij /path-to-input-file /path-to-save-file
 
-Included is a Go type for parsing the resulting json data.
-It embeds the dmij script as a convenience.
+#### sample input and output files
+
+You can find a sample dmidecode text file and generated json file with memory stats in the repository
